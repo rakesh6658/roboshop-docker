@@ -1,4 +1,4 @@
-FROM node:14
+FROM node
 EXPOSE 8080
 WORKDIR /opt/server
 COPY package.json .
