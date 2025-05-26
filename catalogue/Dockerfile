@@ -15,4 +15,5 @@ USER roboshop
 COPY package.json /opt/server/
 COPY server.js /opt/server/
 RUN npm install
+ENV MONGO=true
 CMD ["node", "server.js"]
