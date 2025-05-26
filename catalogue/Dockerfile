@@ -10,7 +10,7 @@ FROM node:18
 
 WORKDIR /opt/server
 
-COPY package.json .
+COPY package.JSON .
 
 RUN npm install
 
