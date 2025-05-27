@@ -62,8 +62,7 @@ services:
     container_name: mysql
     networks:
       - roboshop
-    environment:
-      MYSQL_ROOT_PASSWORD: RoboShop@1  # ✅ REQUIRED
+    
       
     volumes:
       - mysql:/var/lib/mysql
