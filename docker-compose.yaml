@@ -1,3 +1,4 @@
+version: '3.8'
 
 networks:
   roboshop:
@@ -14,7 +15,7 @@ services:
     image: mongodb:v1
     container_name: mongodb
     networks:
-      - roboshop
+      roboshop: {}
     volumes:
       - source: mongodb
         target: /data/db
@@ -24,7 +25,7 @@ services:
     image: catalogue:v1
     container_name: catalogue
     networks:
-      - roboshop
+      roboshop: {}
     depends_on:
       - mongodb
 
@@ -32,9 +33,9 @@ services:
     image: redis
     container_name: redis
     networks:
-      - roboshop
+      roboshop: {}
     ports:
-      - "6379:6379"  
+      - "6379:6379"
     volumes:
       - source: redis
         target: /data
@@ -44,7 +45,7 @@ services:
     image: user:v1
     container_name: user
     networks:
-      - roboshop
+      roboshop: {}
     depends_on:
       - mongodb
       - redis
@@ -56,7 +57,7 @@ services:
     image: cart:v1
     container_name: cart
     networks:
-      - roboshop
+      roboshop: {}
     depends_on:
       - redis
       - catalogue
@@ -68,9 +69,7 @@ services:
     image: mysql:5.7
     container_name: mysql
     networks:
-      - roboshop
-    
-      
+      roboshop: {}
     volumes:
       - mysql:/var/lib/mysql
     ulimits:
@@ -78,29 +77,25 @@ services:
         soft: 65536
         hard: 65536
 
-  
-
   shipping:
-  image: shipping:v1
-  container_name: shipping
-  networks:
-    - roboshop
-  depends_on:
-    - cart
-    - mysql
-  ulimits:
-    nofile:
-      soft: 65536
-      hard: 65536
-  mem_limit: 2g
-
-
+    image: shipping:v1
+    container_name: shipping
+    networks:
+      roboshop: {}
+    depends_on:
+      - cart
+      - mysql
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 2g
 
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
     networks:
-      - roboshop
+      roboshop: {}
     volumes:
       - source: rabbitmq
         target: /var/lib/rabbitmq
@@ -113,7 +108,7 @@ services:
     image: payment:v1
     container_name: payment
     networks:
-      - roboshop
+      roboshop: {}
     depends_on:
       - cart
       - user
@@ -123,7 +118,7 @@ services:
     image: web:v1
     container_name: web
     networks:
-      - roboshop
+      roboshop: {}
     ports:
       - "80:80"
     depends_on:
