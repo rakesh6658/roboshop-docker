@@ -64,6 +64,7 @@ services:
     depends_on:
       - cart
       - mysql  
+    mem_limit: 300m  
 
 
   # rabbitmq:
