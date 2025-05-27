@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   roboshop:
     driver: bridge
@@ -24,8 +22,6 @@ services:
     container_name: redis
     networks:
       - roboshop
-    ports:
-      - "6379:6379"  # optional, expose Redis port outside docker network
 
   user:
     image: user:v1
@@ -44,43 +40,38 @@ services:
     depends_on:
       - redis
       - catalogue
-    environment:
-      - REDIS_HOST=redis
-      - CATALOGUE_HOST=catalogue
-      - CATALOGUE_PORT=8080
 
-  
   mysql:
-    image: mysql:v1
+    image: joindevops/mysql:v1
     container_name: mysql
     networks:
       - roboshop
+    volumes:
+      - mysql:/var/lib/mysql
 
   shipping:
-    image: shipping:v1
+    image: joindevops/shipping:v1
     container_name: shipping
     networks:
       - roboshop
     depends_on:
       - cart
-      - mysql  
-    mem_limit: 300m 
-    ulimits:
-      nofile:
-        soft: 65535
-        hard: 65535 
+      - mysql
 
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
     networks:
       - roboshop
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=roboshop
       - RABBITMQ_DEFAULT_PASS=roboshop123
 
   payment:
-    image: payment
+    build:
+      context: ./payment
     container_name: payment
     networks:
       - roboshop
@@ -88,9 +79,6 @@ services:
       - cart
       - user
       - rabbitmq
-
-
-  
 
   web:
     image: web:v1
@@ -103,4 +91,7 @@ services:
       - catalogue
       - user
       - cart
-      - shipping
+
+volumes:
+  mysql:
+  rabbitmq:
