@@ -22,12 +22,12 @@ services:
     
   user:
     image: user:v1
-     container_name: user
-     networks:
-       - roboshop
-     depends_on:
-       - mongodb
-       - redis
+    container_name: user
+    networks:
+      - roboshop
+    depends_on:
+      - mongodb
+      - redis
   cart:
     image: cart:v1
     container_name: cart
