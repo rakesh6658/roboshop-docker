@@ -34,6 +34,8 @@ services:
     container_name: redis
     networks:
       - roboshop
+    ports:
+      - "6379:6379"  
     volumes:
       - source: redis
         target: /data
