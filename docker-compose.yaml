@@ -58,18 +58,19 @@ services:
       - catalogue
 
   mysql:
-    image: mysql:v1
+    image: mysql:5.7
     container_name: mysql
     networks:
       - roboshop
+    
     volumes:
-      - source: mysql
-        target: /var/lib/mysql
-        type: volume
+      - mysql:/var/lib/mysql
     ulimits:
       nofile:
         soft: 65536
         hard: 65536
+
+  
 
   shipping:
     image: shipping:v1
