@@ -62,7 +62,9 @@ services:
     container_name: mysql
     networks:
       - roboshop
-    
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass   # ✅ REQUIRED
+      MYSQL_DATABASE: shipping 
     volumes:
       - mysql:/var/lib/mysql
     ulimits:
