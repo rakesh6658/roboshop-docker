@@ -31,6 +31,9 @@ services:
     depends_on:
       - mongodb
       - redis
+    environment:
+      - REDIS_HOST=redis
+      - MONGO_HOST=mongodb
 
   cart:
     image: cart:v1
@@ -40,6 +43,8 @@ services:
     depends_on:
       - redis
       - catalogue
+    environment:
+      - REDIS_HOST=redis
 
   mysql:
     image: joindevops/mysql:v1
@@ -57,6 +62,9 @@ services:
     depends_on:
       - cart
       - mysql
+    environment:
+      - CART_ENDPOINT=cart:8080
+      - DB_HOST=mysql
 
   rabbitmq:
     image: rabbitmq
@@ -79,6 +87,10 @@ services:
       - cart
       - user
       - rabbitmq
+    environment:
+      - CART_HOST=cart
+      - USER_HOST=user
+      - RABBITMQ_HOST=rabbitmq
 
   web:
     image: web:v1
