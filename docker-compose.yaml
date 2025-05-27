@@ -95,6 +95,7 @@ services:
   mem_limit: 2g
 
 
+
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
