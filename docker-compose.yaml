@@ -70,29 +70,27 @@ services:
         soft: 65535
         hard: 65535 
 
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    networks:
+      - roboshop
+    environment:
+      - RABBITMQ_DEFAULT_USER=roboshop
+      - RABBITMQ_DEFAULT_PASS=roboshop123
 
-  # rabbitmq:
-  #   image: rabbitmq
-  #   container_name: rabbitmq
-  #   networks:
-  #     - roboshop
-  #   volumes:
-  #     - source: rabbitmq
-  #       target: /var/lib/rabbitmq
-  #       type: volume
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=roboshop
-  #     - RABBITMQ_DEFAULT_PASS=roboshop123
+  payment:
+    image: payment
+    container_name: payment
+    networks:
+      - roboshop
+    depends_on:
+      - cart
+      - user
+      - rabbitmq
 
-  # payment:
-  #   image: joindevops/payment:v1
-  #   container_name: payment
-  #   networks:
-  #     - roboshop
-  #   depends_on:
-  #     - cart
-  #     - user
-  #     - rabbitmq
+
+  
 
   web:
     image: web:v1
