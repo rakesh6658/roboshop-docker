@@ -49,25 +49,22 @@ services:
       - CATALOGUE_HOST=catalogue
       - CATALOGUE_PORT=8080
 
-  # Uncomment and configure when needed:
-  # mysql:
-  #   image: joindevops/mysql:v1
-  #   container_name: mysql
-  #   networks:
-  #     - roboshop
-  #   volumes:
-  #     - source: mysql
-  #       target: /var/lib/mysql
-  #       type: volume
+  
+  mysql:
+    image: mysql:v1
+    container_name: mysql
+    networks:
+      - roboshop
 
-  # shipping:
-  #   image: joindevops/shipping:v1
-  #   container_name: shipping
-  #   networks:
-  #     - roboshop
-  #   depends_on:
-  #     - cart
-  #     - mysql
+  shipping:
+    image: shipping:v1
+    container_name: shipping
+    networks:
+      - roboshop
+    depends_on:
+      - cart
+      - mysql  
+
 
   # rabbitmq:
   #   image: rabbitmq
@@ -103,3 +100,4 @@ services:
       - catalogue
       - user
       - cart
+      - shipping
