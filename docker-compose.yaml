@@ -1,3 +1,5 @@
+version: '3.8'
+
 networks:
   roboshop:
     driver: bridge
@@ -16,6 +18,8 @@ services:
       - roboshop
     depends_on:
       - mongodb
+    environment:
+      - MONGO_HOST=mongodb
 
   redis:
     image: redis
@@ -32,8 +36,8 @@ services:
       - mongodb
       - redis
     environment:
-      - REDIS_HOST=redis
       - MONGO_HOST=mongodb
+      - REDIS_HOST=redis
 
   cart:
     image: cart:v1
@@ -45,6 +49,7 @@ services:
       - catalogue
     environment:
       - REDIS_HOST=redis
+      - CATALOGUE_HOST=catalogue
 
   mysql:
     image: joindevops/mysql:v1
@@ -53,6 +58,9 @@ services:
       - roboshop
     volumes:
       - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=yourRootPassword  # Change to secure password
+      - MYSQL_DATABASE=roboshop
 
   shipping:
     image: joindevops/shipping:v1
@@ -103,6 +111,8 @@ services:
       - catalogue
       - user
       - cart
+      - shipping
+      - payment
 
 volumes:
   mysql:
