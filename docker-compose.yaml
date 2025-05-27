@@ -49,6 +49,9 @@ services:
     depends_on:
       - mongodb
       - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
   cart:
     image: cart:v1
@@ -58,6 +61,9 @@ services:
     depends_on:
       - redis
       - catalogue
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
   mysql:
     image: mysql:5.7
