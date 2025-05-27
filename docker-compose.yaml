@@ -1,11 +1,15 @@
+version: '3.8'
+
 networks:
   roboshop:
     driver: bridge
+
 volumes:
   mongodb:
   redis:
   mysql:
   rabbitmq:
+
 services:
   mongodb:
     image: mongodb:v1
@@ -13,25 +17,28 @@ services:
     networks:
       - roboshop
     volumes:
-    - source: mongodb
-      target: /data/db
-      type: volume
+      - source: mongodb
+        target: /data/db
+        type: volume
+
   catalogue:
     image: catalogue:v1
     container_name: catalogue
     networks:
-    - roboshop
+      - roboshop
     depends_on:
-    - mongodb
+      - mongodb
+
   redis:
     image: redis
     container_name: redis
     networks:
       - roboshop
     volumes:
-    - source: redis
-      target: /data
-      type: volume
+      - source: redis
+        target: /data
+        type: volume
+
   user:
     image: user:v1
     container_name: user
@@ -40,6 +47,7 @@ services:
     depends_on:
       - mongodb
       - redis
+
   cart:
     image: cart:v1
     container_name: cart
@@ -48,15 +56,23 @@ services:
     depends_on:
       - redis
       - catalogue
+
   mysql:
-    image: mysql:v1
+    image: mysql:5.7
     container_name: mysql
     networks:
       - roboshop
     volumes:
-    - source: mysql
-      target: /var/lib/mysql
-      type: volume
+      - source: mysql
+        target: /var/lib/mysql
+        type: volume
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
   shipping:
     image: shipping:v1
     container_name: shipping
@@ -65,18 +81,21 @@ services:
     depends_on:
       - cart
       - mysql
+    mem_limit: 2g
+
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
     networks:
       - roboshop
     volumes:
-    - source: rabbitmq
-      target: /var/lib/rabbitmq
-      type: volume
+      - source: rabbitmq
+        target: /var/lib/rabbitmq
+        type: volume
     environment:
-    - RABBITMQ_DEFAULT_USER=roboshop
-    - RABBITMQ_DEFAULT_PASS=roboshop123
+      - RABBITMQ_DEFAULT_USER=roboshop
+      - RABBITMQ_DEFAULT_PASS=roboshop123
+
   payment:
     image: payment:v1
     container_name: payment
@@ -86,16 +105,17 @@ services:
       - cart
       - user
       - rabbitmq
+
   web:
     image: web:v1
     container_name: web
     networks:
-    - roboshop
+      - roboshop
     ports:
-    - "80:80"
+      - "80:80"
     depends_on:
-    - catalogue
-    - user
-    - cart
-    - shipping
-    - payment
+      - catalogue
+      - user
+      - cart
+      - shipping
+      - payment
